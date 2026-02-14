@@ -30,11 +30,12 @@ export const PropertyCard: FC<PropertyCardProps> = ({ property }) => {
     <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
       {/* Image */}
       <div class="relative overflow-hidden">
-        <div class="aspect-[4/3] bg-gradient-to-br from-twilight-blue/20 to-mist-gray/20 flex items-center justify-center">
-          <div class="text-center text-mist-gray">
-            <i class="fas fa-image text-4xl mb-2"></i>
-            <p class="text-sm">Property Image</p>
-          </div>
+        <div class="aspect-[4/3] bg-gradient-to-br from-twilight-blue/20 to-mist-gray/20">
+          <img 
+            src={property.image}
+            alt={property.title}
+            class="w-full h-full object-cover"
+          />
         </div>
         
         {/* Overlay on hover */}

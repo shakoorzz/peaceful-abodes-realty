@@ -18,10 +18,19 @@ app.get('/', (c) => {
       <Navigation />
       
       {/* Hero Section */}
-      <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-twilight-blue via-twilight-blue/90 to-twilight-blue/80">
-        <div class="absolute inset-0 bg-black/40"></div>
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          {/* Logo */}
+      <section class="relative min-h-screen flex items-center justify-center">
+        {/* Hero Background Image */}
+        <div class="absolute inset-0 bg-gradient-to-br from-twilight-blue via-twilight-blue/90 to-twilight-blue/80">
+          <img 
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80" 
+            alt="Luxury home at twilight" 
+            class="w-full h-full object-cover opacity-40"
+          />
+          <div class="absolute inset-0 bg-gradient-to-b from-twilight-blue/70 via-twilight-blue/50 to-twilight-blue/80"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-28 pb-24">
+          {/* Logo - with proper top margin to avoid nav overlap */}
           <div class="w-32 h-32 mx-auto mb-8 bg-warm-amber rounded-full flex items-center justify-center border-4 border-white/30 shadow-2xl animate-fade-in">
             <i class="fas fa-home text-white text-5xl"></i>
           </div>
@@ -50,19 +59,20 @@ app.get('/', (c) => {
           </div>
           
           {/* CTA Buttons */}
-          <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-3 opacity-0">
+          <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-3 opacity-0 mb-16">
             <a href="/properties" class="bg-warm-amber hover:bg-warm-amber/80 text-white px-8 py-4 rounded font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
               Browse Properties
             </a>
-            <a href="/contact" class="border-2 border-white text-white hover:bg-white hover:text-twilight-blue px-8 py-4 rounded font-semibold text-lg transition-all duration-300">
+            <a href="/contact" class="border-2 border-white text-white hover:bg-white hover:text-twilight-blue px-8 py-4 rounded font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2">
+              <i class="fas fa-chevron-down text-sm"></i>
               Schedule Consultation
             </a>
           </div>
         </div>
         
-        {/* Scroll indicator */}
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <i class="fas fa-chevron-down text-white/50 text-2xl"></i>
+        {/* Scroll indicator - positioned with more space from buttons */}
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce hidden sm:block">
+          <i class="fas fa-chevron-down text-white/30 text-xl"></i>
         </div>
       </section>
       
@@ -147,8 +157,12 @@ app.get('/', (c) => {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {neighborhoods.slice(0, 6).map(neighborhood => (
               <a href={`/neighborhoods/${neighborhood.id}`} class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
-                <div class="aspect-[4/3] bg-gradient-to-br from-twilight-blue/60 to-twilight-blue/40 flex items-center justify-center">
-                  <i class="fas fa-map-marker-alt text-white/30 text-5xl"></i>
+                <div class="aspect-[4/3]">
+                  <img 
+                    src={neighborhood.image} 
+                    alt={neighborhood.name}
+                    class="w-full h-full object-cover"
+                  />
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6">
