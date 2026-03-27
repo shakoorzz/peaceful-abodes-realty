@@ -29,3 +29,6 @@ Thumbs.db
 *.bak
 *.tar.gz
 *.zip
+
+# Temporary working files
+/tmp/
