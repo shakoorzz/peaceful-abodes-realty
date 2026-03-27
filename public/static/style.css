@@ -164,3 +164,19 @@ html {
 #mobile-menu.pointer-events-auto {
   visibility: visible;
 }
+
+/* Carousel transitions */
+.carousel-image {
+  transition: opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform: scale(1.03);
+  will-change: opacity, transform;
+}
+
+.carousel-image.is-active {
+  transform: scale(1);
+}
+
+.carousel-image.is-inactive {
+  transform: scale(1.03);
+}

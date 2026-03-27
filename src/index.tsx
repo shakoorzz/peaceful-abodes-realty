@@ -42,8 +42,14 @@ app.get('/', (c) => {
           <p class="text-xl md:text-2xl text-white/90 mb-4 animate-fade-in-delay-2 opacity-0 italic">
             "Helping you find your Peaceful Abode..."
           </p>
-          <p class="text-lg text-white/70 mb-8 animate-fade-in-delay-2 opacity-0">
+          <p class="text-lg text-white/70 mb-4 animate-fade-in-delay-2 opacity-0">
             Here and around the world
+          </p>
+          <p class="text-2xl md:text-3xl text-white font-semibold mb-2 animate-fade-in-delay-2 opacity-0">
+            Buy or Sell your Home with Peace of Mind
+          </p>
+          <p class="text-lg text-white/80 mb-8 animate-fade-in-delay-2 opacity-0">
+            Rochester, N.Y. | United States | International
           </p>
           
           {/* Stats badges */}
@@ -326,6 +332,10 @@ app.get('/properties/:id', (c) => {
       maximumFractionDigits: 0,
     }).format(price)
   }
+
+  const propertyImages = property.images && property.images.length > 0
+    ? property.images
+    : [property.image]
   
   return c.render(
     <>
@@ -347,10 +357,73 @@ app.get('/properties/:id', (c) => {
             <div class="lg:col-span-2">
               {/* Image Gallery */}
               <div class="bg-white rounded-xl overflow-hidden shadow-md mb-8">
-                <div class="aspect-video bg-gradient-to-br from-twilight-blue/20 to-mist-gray/20 flex items-center justify-center">
-                  <div class="text-center text-mist-gray">
-                    <i class="fas fa-images text-6xl mb-4"></i>
-                    <p>Property Gallery</p>
+                <div class="relative" data-carousel-root>
+                  <div class="relative h-[50vh] sm:h-[420px] lg:h-[480px] overflow-hidden bg-black/5">
+                    {propertyImages.map((image, index) => (
+                      <img
+                        src={image}
+                        alt={`${property.title} photo ${index + 1}`}
+                        class={`carousel-image absolute inset-0 h-full w-full object-cover ${index === 0 ? 'opacity-100 is-active' : 'opacity-0 is-inactive'}`}
+                        data-carousel-image
+                        data-index={index}
+                        data-staged={image.includes('staged') ? 'true' : 'false'}
+                      />
+                    ))}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
+
+                    <div class="absolute bottom-4 left-4">
+                      <span class="hidden rounded-full bg-black/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white" data-carousel-staged-label>
+                        Concept Interior
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-charcoal shadow-lg transition hover:bg-white"
+                      aria-label="Previous image"
+                      data-carousel-prev
+                    >
+                      <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-charcoal shadow-lg transition hover:bg-white"
+                      aria-label="Next image"
+                      data-carousel-next
+                    >
+                      <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+                      {propertyImages.map((_, index) => (
+                        <button
+                          type="button"
+                          aria-label={`Go to image ${index + 1}`}
+                          class={`h-2.5 w-2.5 rounded-full transition ${index === 0 ? 'bg-warm-amber' : 'bg-white/70 hover:bg-white'}`}
+                          data-carousel-dot
+                          data-index={index}
+                        ></button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-4 sm:grid-cols-7 gap-2 bg-soft-cream/60 p-4">
+                    {propertyImages.map((image, index) => (
+                      <button
+                        type="button"
+                        class={`relative overflow-hidden rounded-lg border-2 transition ${index === 0 ? 'border-warm-amber' : 'border-transparent hover:border-warm-amber/60'}`}
+                        data-carousel-thumb
+                        data-index={index}
+                        aria-label={`View image ${index + 1}`}
+                      >
+                        <img
+                          src={image}
+                          alt={`${property.title} thumbnail ${index + 1}`}
+                          class="h-20 w-full object-cover"
+                          loading="lazy"
+                        />
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -657,37 +730,30 @@ app.get('/about', (c) => {
         {/* Owner Bio Section */}
         <section class="py-16 px-4 bg-white">
           <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              {/* Photo */}
-              <div class="order-2 lg:order-1">
-                <div class="relative">
-                  <div class="rounded-2xl overflow-hidden shadow-2xl">
-                    <div class="aspect-[4/5] bg-gradient-to-br from-twilight-blue to-twilight-blue/80 flex items-center justify-center">
-                      <div class="text-center">
-                        <div class="w-48 h-48 mx-auto bg-warm-amber rounded-full flex items-center justify-center mb-6 shadow-lg">
-                          <i class="fas fa-user text-white text-7xl"></i>
-                        </div>
-                        <p class="text-white/60 text-sm">Professional Photo Coming Soon</p>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Decorative elements */}
-                  <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-warm-amber/20 rounded-full -z-10"></div>
-                  <div class="absolute -top-4 -left-4 w-16 h-16 bg-warm-amber/30 rounded-full -z-10"></div>
-                </div>
-              </div>
-              
+            <div class="grid grid-cols-1 gap-12 items-center">
               {/* Bio Content */}
-              <div class="order-1 lg:order-2">
-                <div class="inline-block bg-warm-amber/10 text-warm-amber px-4 py-2 rounded-full text-sm font-medium mb-4">
-                  <i class="fas fa-star mr-2"></i>Owner/CEO & Licensed Real Estate Salesperson
-                </div>
+              <div>
                 <h2 class="font-serif text-4xl md:text-5xl text-charcoal font-bold mb-4">
                   Abubakr Abdul-Latif
                 </h2>
-                <p class="text-xl text-mist-gray mb-6">
+                <div class="inline-block bg-warm-amber/10 text-warm-amber px-4 py-2 rounded-full text-sm font-medium mb-4">
+                  <i class="fas fa-star mr-2"></i>Owner/CEO & Licensed Real Estate Salesperson
+                </div>
+                <p class="text-xl text-mist-gray mb-4">
                   Your Partner in Real Estate Investment
                 </p>
+
+                <div class="relative mt-6 mb-8">
+                  <div class="rounded-2xl overflow-hidden shadow-2xl">
+                    <img
+                      src="/static/agent-photo.jpg"
+                      alt="Abubakr Abdul-Latif"
+                      class="w-full max-w-md mx-auto object-cover rounded-2xl"
+                    />
+                  </div>
+                  <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-warm-amber/20 rounded-full -z-10"></div>
+                  <div class="absolute -top-4 -left-4 w-16 h-16 bg-warm-amber/30 rounded-full -z-10"></div>
+                </div>
                 
                 <div class="space-y-4 text-charcoal leading-relaxed">
                   <p>
@@ -709,13 +775,33 @@ app.get('/about', (c) => {
                   </p>
                 </div>
                 
+                {/* Contact Details */}
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-mist-gray">
+                  <div class="bg-soft-cream rounded-lg p-4">
+                    <p class="font-semibold text-charcoal">Cell</p>
+                    <p>8457758203</p>
+                  </div>
+                  <div class="bg-soft-cream rounded-lg p-4">
+                    <p class="font-semibold text-charcoal">Email</p>
+                    <p>bubak75@gmail.com</p>
+                  </div>
+                  <div class="bg-soft-cream rounded-lg p-4">
+                    <p class="font-semibold text-charcoal">Company</p>
+                    <p>Nationwide Houses LLC</p>
+                  </div>
+                  <div class="bg-soft-cream rounded-lg p-4">
+                    <p class="font-semibold text-charcoal">Office</p>
+                    <p>1370 West Ridge #1019</p>
+                  </div>
+                </div>
+
                 {/* Contact Quick Links */}
-                <div class="mt-8 flex flex-wrap gap-4">
+                <div class="mt-6 flex flex-wrap gap-4">
                   <a href="/contact" class="inline-flex items-center gap-2 bg-warm-amber hover:bg-warm-amber/80 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-md">
                     <i class="fas fa-calendar-alt"></i>
                     Schedule a Meeting
                   </a>
-                  <a href="tel:5852108001" class="inline-flex items-center gap-2 border-2 border-twilight-blue text-twilight-blue hover:bg-twilight-blue hover:text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                  <a href="tel:8457758203" class="inline-flex items-center gap-2 border-2 border-twilight-blue text-twilight-blue hover:bg-twilight-blue hover:text-white px-6 py-3 rounded-lg font-medium transition-colors">
                     <i class="fas fa-phone"></i>
                     Call Direct
                   </a>
@@ -809,45 +895,86 @@ app.get('/about', (c) => {
 
 // Client Portal Page
 app.get('/portal', (c) => {
+  const supabaseUrl = c.env?.SUPABASE_URL ?? ''
+  const supabaseAnonKey = c.env?.SUPABASE_ANON_KEY ?? ''
+
   return c.render(
     <>
       <Navigation />
       
       <main class="pt-24 pb-16 bg-soft-cream min-h-screen flex items-center justify-center">
-        <div class="max-w-md mx-auto px-4 w-full">
-          <div class="bg-white rounded-xl shadow-md p-8">
+        <div class="max-w-2xl mx-auto px-4 w-full">
+          <div class="bg-white rounded-xl shadow-md p-8" id="portal-auth" data-portal-mode="client" data-supabase-url={supabaseUrl} data-supabase-anon-key={supabaseAnonKey}>
             <div class="text-center mb-8">
               <div class="w-16 h-16 mx-auto mb-4 bg-warm-amber rounded-full flex items-center justify-center">
                 <i class="fas fa-user-circle text-white text-3xl"></i>
               </div>
               <h1 class="font-serif text-2xl text-charcoal font-bold">Client Portal</h1>
-              <p class="text-mist-gray mt-2">Sign in to access your account</p>
+              <p class="text-mist-gray mt-2">Sign in or create your investor profile</p>
             </div>
-            
-            <form class="space-y-6">
+
+            <div class="flex justify-center gap-3 mb-8">
+              <button type="button" class="portal-tab px-4 py-2 rounded-full bg-warm-amber text-white text-sm font-semibold" data-portal-tab="login">Sign In</button>
+              <button type="button" class="portal-tab px-4 py-2 rounded-full bg-soft-cream text-charcoal text-sm font-semibold" data-portal-tab="signup">Create Account</button>
+            </div>
+
+            <div id="portal-message" class="hidden mb-6 rounded-lg border px-4 py-3 text-sm"></div>
+
+            <form id="login-form" data-skip-validation class="space-y-6">
               <div>
                 <label class="block text-charcoal font-medium mb-2">Email</label>
-                <input type="email" class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="you@example.com" />
+                <input name="email" type="email" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="you@example.com" />
               </div>
               <div>
                 <label class="block text-charcoal font-medium mb-2">Password</label>
-                <input type="password" class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="••••••••" />
-              </div>
-              <div class="flex items-center justify-between text-sm">
-                <label class="flex items-center gap-2 text-charcoal">
-                  <input type="checkbox" class="rounded text-warm-amber focus:ring-warm-amber" />
-                  Remember me
-                </label>
-                <a href="#" class="text-warm-amber hover:underline">Forgot password?</a>
+                <input name="password" type="password" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="••••••••" />
               </div>
               <button type="submit" class="w-full bg-warm-amber hover:bg-warm-amber/80 text-white py-3 rounded font-semibold transition-colors">
                 Sign In
               </button>
+              <p class="text-center text-mist-gray text-sm">
+                Don&apos;t have an account?
+                <button type="button" class="portal-tab ml-2 text-warm-amber hover:underline" data-portal-tab="signup">Create one</button>
+              </p>
             </form>
-            
-            <p class="text-center text-mist-gray text-sm mt-6">
-              Don't have an account? <a href="/contact" class="text-warm-amber hover:underline">Contact us</a>
-            </p>
+
+            <form id="signup-form" data-skip-validation class="space-y-6 hidden">
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Full Name</label>
+                <input name="full_name" type="text" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="Your name" />
+              </div>
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Role</label>
+                <select name="role" class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors bg-white">
+                  <option value="investor">Investor</option>
+                  <option value="agent">Agent</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Email</label>
+                <input name="email" type="email" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="you@example.com" />
+              </div>
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Password</label>
+                <input name="password" type="password" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="Minimum 8 characters" />
+              </div>
+              <button type="submit" class="w-full bg-twilight-blue hover:bg-twilight-blue/90 text-white py-3 rounded font-semibold transition-colors">
+                Create Account
+              </button>
+            </form>
+
+            <div id="portal-profile" class="hidden mt-8 border-t border-gray-100 pt-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-mist-gray">Signed in as</p>
+                  <p class="font-semibold text-charcoal" id="profile-name">-</p>
+                  <p class="text-sm text-mist-gray" id="profile-role">-</p>
+                </div>
+                <button id="signout-btn" class="px-4 py-2 rounded-full border border-warm-amber text-warm-amber text-sm font-semibold hover:bg-warm-amber hover:text-white transition-colors">
+                  Sign Out
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -855,6 +982,581 @@ app.get('/portal', (c) => {
       <Footer />
     </>,
     { title: 'Client Portal | Peaceful Abodes Realty' }
+  )
+})
+
+// Agent Portal
+app.get('/agent', (c) => {
+  const supabaseUrl = c.env?.SUPABASE_URL ?? ''
+  const supabaseAnonKey = c.env?.SUPABASE_ANON_KEY ?? ''
+
+  return c.render(
+    <>
+      <Navigation />
+
+      <main class="pt-28 pb-16 bg-soft-cream min-h-screen">
+        <div class="max-w-2xl mx-auto px-4 w-full">
+          <div class="bg-white rounded-xl shadow-md p-8" id="portal-auth" data-portal-mode="agent" data-supabase-url={supabaseUrl} data-supabase-anon-key={supabaseAnonKey}>
+            <div class="text-center mb-8">
+              <div class="w-16 h-16 mx-auto mb-4 bg-twilight-blue rounded-full flex items-center justify-center">
+                <i class="fas fa-briefcase text-white text-3xl"></i>
+              </div>
+              <h1 class="font-serif text-2xl text-charcoal font-bold">Agent Portal</h1>
+              <p class="text-mist-gray mt-2">Create your agent workspace or sign in to continue.</p>
+            </div>
+
+            <div class="flex justify-center gap-3 mb-8">
+              <button type="button" class="portal-tab px-4 py-2 rounded-full bg-soft-cream text-charcoal text-sm font-semibold" data-portal-tab="login">Sign In</button>
+              <button type="button" class="portal-tab px-4 py-2 rounded-full bg-warm-amber text-white text-sm font-semibold" data-portal-tab="signup">Create Account</button>
+            </div>
+
+            <div id="portal-message" class="hidden mb-6 rounded-lg border px-4 py-3 text-sm"></div>
+
+            <form id="login-form" data-skip-validation class="space-y-6">
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Email</label>
+                <input name="email" type="email" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="agent@agency.com" />
+              </div>
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Password</label>
+                <input name="password" type="password" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="••••••••" />
+              </div>
+              <button type="submit" class="w-full bg-warm-amber hover:bg-warm-amber/80 text-white py-3 rounded font-semibold transition-colors">
+                Sign In
+              </button>
+              <p class="text-center text-mist-gray text-sm">
+                New agent?
+                <button type="button" class="portal-tab ml-2 text-warm-amber hover:underline" data-portal-tab="signup">Create an agent account</button>
+              </p>
+            </form>
+
+            <form id="signup-form" data-skip-validation class="space-y-6 hidden">
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Full Name</label>
+                <input name="full_name" type="text" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="Agent name" />
+              </div>
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Role</label>
+                <select name="role" class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors bg-white">
+                  <option value="agent">Agent</option>
+                  <option value="investor">Investor</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Email</label>
+                <input name="email" type="email" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="agent@agency.com" />
+              </div>
+              <div>
+                <label class="block text-charcoal font-medium mb-2">Password</label>
+                <input name="password" type="password" required class="w-full px-4 py-3 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber transition-colors" placeholder="Minimum 8 characters" />
+              </div>
+              <button type="submit" class="w-full bg-twilight-blue hover:bg-twilight-blue/90 text-white py-3 rounded font-semibold transition-colors">
+                Create Agent Account
+              </button>
+            </form>
+
+            <div id="portal-profile" class="hidden mt-8 border-t border-gray-100 pt-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-mist-gray">Signed in as</p>
+                  <p class="font-semibold text-charcoal" id="profile-name">-</p>
+                  <p class="text-sm text-mist-gray" id="profile-role">-</p>
+                </div>
+                <button id="signout-btn" class="px-4 py-2 rounded-full border border-warm-amber text-warm-amber text-sm font-semibold hover:bg-warm-amber hover:text-white transition-colors">
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <Footer />
+    </>,
+    { title: 'Agent Portal | Peaceful Abodes Realty' }
+  )
+})
+
+// Investor Command Center Dashboard
+app.get('/dashboard', (c) => {
+  const supabaseUrl = c.env?.SUPABASE_URL ?? ''
+  const supabaseAnonKey = c.env?.SUPABASE_ANON_KEY ?? ''
+
+  return c.render(
+    <>
+      <Navigation />
+
+      <main class="pt-24 pb-16 bg-soft-cream min-h-screen">
+        <div class="max-w-7xl mx-auto px-4" id="dashboard" data-supabase-url={supabaseUrl} data-supabase-anon-key={supabaseAnonKey}>
+          <div class="bg-white rounded-2xl shadow-md p-8 mb-10">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div>
+                <p class="text-sm text-warm-amber font-semibold uppercase tracking-widest">Tier 1 Operations Hub</p>
+                <h1 class="font-serif text-4xl text-charcoal font-bold mt-2">Labor Efficiency Snapshot</h1>
+                <p class="text-mist-gray mt-2">Tier 1 scope only: triage, alerts, vendor compliance, and reporting.</p>
+              </div>
+              <div class="flex flex-wrap gap-3">
+                <span class="px-4 py-2 rounded-full bg-warm-amber/10 text-warm-amber text-sm font-semibold">
+                  Scope: Tier 1
+                </span>
+                <span class="px-4 py-2 rounded-full bg-soft-cream text-mist-gray text-sm font-semibold">
+                  Alerts Only
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-sm p-6 mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <p class="text-sm text-mist-gray">Signed in as</p>
+              <p class="text-2xl font-semibold text-charcoal mt-2" id="dashboard-name">-</p>
+              <p class="text-sm text-mist-gray" id="dashboard-email">-</p>
+              <p class="text-sm text-mist-gray" id="dashboard-role">-</p>
+            </div>
+            <button id="dashboard-signout" class="px-5 py-2 rounded-full border border-warm-amber text-warm-amber text-sm font-semibold hover:bg-warm-amber hover:text-white transition-colors">
+              Sign Out
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">Triage Requests (30d)</p>
+              <p class="text-3xl font-bold text-charcoal mt-2">214</p>
+              <p class="text-xs text-forest-green mt-2">84% resolved without escalation</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">Time Recovered</p>
+              <p class="text-3xl font-bold text-charcoal mt-2">62 hrs</p>
+              <p class="text-xs text-mist-gray mt-2">Estimated staff capacity gain</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">Vendor Docs in Compliance</p>
+              <p class="text-3xl font-bold text-charcoal mt-2">18</p>
+              <p class="text-xs text-warm-amber mt-2">3 expiring within 30 days</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">FMR Alerts (90d)</p>
+              <p class="text-3xl font-bold text-charcoal mt-2">4</p>
+              <p class="text-xs text-mist-gray mt-2">Section 8 HUD updates</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="font-serif text-2xl text-charcoal font-bold">Maintenance Triage Queue</h2>
+                  <span class="text-xs uppercase tracking-widest text-mist-gray">Preview</span>
+                </div>
+                <div class="space-y-4">
+                  {[
+                    { request: 'Leaking kitchen faucet', status: 'Auto-Resolved', priority: 'Low' },
+                    { request: 'Heat not working - Unit 3B', status: 'Escalated', priority: 'High' },
+                    { request: 'Parking decal replacement', status: 'Auto-Resolved', priority: 'Low' },
+                    { request: 'Roof inspection follow-up', status: 'Assigned', priority: 'Medium' },
+                  ].map(item => (
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between border border-gray-100 rounded-lg px-4 py-3 gap-2">
+                      <div>
+                        <p class="text-charcoal font-medium">{item.request}</p>
+                        <p class="text-xs text-mist-gray">Priority: {item.priority}</p>
+                      </div>
+                      <span class={`text-xs font-semibold px-3 py-1 rounded-full ${item.status === 'Auto-Resolved' ? 'bg-forest-green/10 text-forest-green' : item.status === 'Escalated' ? 'bg-warm-amber/10 text-warm-amber' : 'bg-soft-cream text-mist-gray'}`}>
+                        {item.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="font-serif text-2xl text-charcoal font-bold">Monthly Capacity Report</h2>
+                  <span class="text-xs uppercase tracking-widest text-mist-gray">Export PDF</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { label: 'Requests handled by AI', value: '346' },
+                    { label: 'Human escalations', value: '68' },
+                    { label: 'Estimated hours recovered', value: '62 hrs' },
+                    { label: 'Estimated vacancy recovery', value: '$12k–$24k/yr' },
+                  ].map(item => (
+                    <div class="border border-gray-100 rounded-xl p-4">
+                      <p class="text-sm text-mist-gray">{item.label}</p>
+                      <p class="text-lg font-semibold text-charcoal mt-2">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <p class="text-xs text-mist-gray mt-4">Estimates shown for preview purposes only.</p>
+              </section>
+            </div>
+
+            <div class="space-y-8">
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <h2 class="font-serif text-2xl text-charcoal font-bold mb-4">Section 8 FMR Alerts</h2>
+                <div class="space-y-4">
+                  {[
+                    { zip: '11201', change: '+$95/unit', time: '2d ago' },
+                    { zip: '10011', change: '+$110/unit', time: '1w ago' },
+                    { zip: '13202', change: '+$70/unit', time: '3w ago' },
+                  ].map(item => (
+                    <div class="flex items-center justify-between border border-gray-100 rounded-lg px-4 py-3">
+                      <div>
+                        <p class="text-charcoal font-medium">Zip {item.zip}</p>
+                        <p class="text-xs text-mist-gray">HUD Fair Market Rent update</p>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-sm font-semibold text-forest-green">{item.change}</p>
+                        <p class="text-xs text-mist-gray">{item.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <h2 class="font-serif text-2xl text-charcoal font-bold mb-4">Vendor Compliance Tracker</h2>
+                <div class="space-y-4">
+                  {[
+                    { vendor: 'Brightline Plumbing', status: 'In Compliance', expiry: 'May 28' },
+                    { vendor: 'Apex Roofing Co.', status: 'Expiring Soon', expiry: 'Apr 12' },
+                    { vendor: 'Metro HVAC', status: 'In Compliance', expiry: 'Jun 02' },
+                  ].map(item => (
+                    <div class="flex items-center justify-between border border-gray-100 rounded-lg px-4 py-3">
+                      <div>
+                        <p class="text-charcoal font-medium">{item.vendor}</p>
+                        <p class="text-xs text-mist-gray">Insurance expiry: {item.expiry}</p>
+                      </div>
+                      <span class={`text-xs font-semibold px-3 py-1 rounded-full ${item.status === 'In Compliance' ? 'bg-forest-green/10 text-forest-green' : 'bg-warm-amber/10 text-warm-amber'}`}>
+                        {item.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </>,
+    { title: 'Investor Command Center | Peaceful Abodes Realty' }
+  )
+})
+
+// Agent Dashboard
+app.get('/agent-dashboard', (c) => {
+  const supabaseUrl = c.env?.SUPABASE_URL ?? ''
+  const supabaseAnonKey = c.env?.SUPABASE_ANON_KEY ?? ''
+
+  return c.render(
+    <>
+      <Navigation />
+
+      <main class="pt-24 pb-16 bg-soft-cream min-h-screen">
+        <div class="max-w-7xl mx-auto px-4" id="agent-dashboard" data-supabase-url={supabaseUrl} data-supabase-anon-key={supabaseAnonKey}>
+          <div class="bg-white rounded-2xl shadow-md p-8 mb-10">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div>
+                <p class="text-sm text-warm-amber font-semibold uppercase tracking-widest">Agent Workspace</p>
+                <h1 class="font-serif text-4xl text-charcoal font-bold mt-2">Lead Intake & Deal Tracker</h1>
+                <p class="text-mist-gray mt-2">Lightweight CRM to organize investor leads and deal flow.</p>
+              </div>
+              <div class="flex flex-wrap gap-3">
+                <span class="px-4 py-2 rounded-full bg-twilight-blue/10 text-twilight-blue text-sm font-semibold">
+                  Agent Workspace
+                </span>
+                <span class="px-4 py-2 rounded-full bg-warm-amber/10 text-warm-amber text-sm font-semibold">
+                  Lite CRM
+                </span>
+                <span class="px-4 py-2 rounded-full bg-soft-cream text-mist-gray text-sm font-semibold">
+                  Agent-Only
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-sm p-6 mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <p class="text-sm text-mist-gray">Signed in as</p>
+              <p class="text-2xl font-semibold text-charcoal mt-2" id="agent-name">-</p>
+              <p class="text-sm text-mist-gray" id="agent-email">-</p>
+              <p class="text-sm text-mist-gray" id="agent-role">-</p>
+            </div>
+            <button id="agent-signout" class="px-5 py-2 rounded-full border border-warm-amber text-warm-amber text-sm font-semibold hover:bg-warm-amber hover:text-white transition-colors">
+              Sign Out
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">Active Leads</p>
+              <p class="text-3xl font-bold text-charcoal mt-2" id="agent-kpi-active">0</p>
+              <p class="text-xs text-forest-green mt-2" id="agent-kpi-growth">Ready for new outreach</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">Tours Scheduled</p>
+              <p class="text-3xl font-bold text-charcoal mt-2" id="agent-kpi-tours">0</p>
+              <p class="text-xs text-mist-gray mt-2">Next 7 days</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">Offers Out</p>
+              <p class="text-3xl font-bold text-charcoal mt-2" id="agent-kpi-offers">0</p>
+              <p class="text-xs text-warm-amber mt-2">Awaiting response</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+              <p class="text-sm text-mist-gray">Closed This Quarter</p>
+              <p class="text-3xl font-bold text-charcoal mt-2" id="agent-kpi-closed">0</p>
+              <p class="text-xs text-mist-gray mt-2">Deals marked closed</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="font-serif text-2xl text-charcoal font-bold">Lead Intake</h2>
+                  <span class="text-xs uppercase tracking-widest text-mist-gray">Lite CRM</span>
+                </div>
+                <form id="agent-lead-form" data-skip-validation class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Lead Name</label>
+                    <input name="lead_name" required class="w-full px-4 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Investor name" />
+                  </div>
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Budget</label>
+                    <input name="budget" class="w-full px-4 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="$1.5M" />
+                  </div>
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Target Area</label>
+                    <input name="target_area" class="w-full px-4 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Brooklyn, NY" />
+                  </div>
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Timeline</label>
+                    <select name="timeline" class="w-full px-4 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber bg-white">
+                      <option value="0-30 days">0-30 days</option>
+                      <option value="30-60 days">30-60 days</option>
+                      <option value="60-90 days">60-90 days</option>
+                      <option value="90+ days">90+ days</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Stage</label>
+                    <select name="stage" class="w-full px-4 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber bg-white">
+                      <option value="New">New</option>
+                      <option value="Qualified">Qualified</option>
+                      <option value="Tours Scheduled">Tours Scheduled</option>
+                      <option value="Offer Drafted">Offer Drafted</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Next Action</label>
+                    <input name="next_action" class="w-full px-4 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Send shortlist" />
+                  </div>
+                  <div class="md:col-span-2">
+                    <label class="block text-sm text-mist-gray mb-2">Notes</label>
+                    <textarea name="notes" class="w-full px-4 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" rows={3} placeholder="Key requirements, preferences, or follow-ups."></textarea>
+                  </div>
+                  <div class="md:col-span-2 flex items-center justify-between">
+                    <p class="text-xs text-mist-gray" id="agent-lead-status">No leads added yet.</p>
+                    <div class="flex items-center gap-3">
+                      <button id="agent-cancel-edit" type="button" class="hidden px-4 py-2 rounded border border-mist-gray/40 text-mist-gray text-sm font-semibold hover:bg-gray-50 transition-colors">
+                        Cancel
+                      </button>
+                      <button type="submit" class="px-6 py-2 rounded bg-warm-amber text-white font-semibold hover:bg-warm-amber/80 transition-colors">
+                        Add Lead
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </section>
+
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="font-serif text-2xl text-charcoal font-bold">Deal Tracker</h2>
+                  <span class="text-xs uppercase tracking-widest text-mist-gray">Pipeline</span>
+                </div>
+                <div class="space-y-4" id="agent-deal-list">
+                  <div class="border border-dashed border-mist-gray/40 rounded-lg px-4 py-6 text-center text-sm text-mist-gray">
+                    Deal pipeline will appear here after you add a lead.
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div class="space-y-8">
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="font-serif text-2xl text-charcoal font-bold">Offer Checklist</h2>
+                  <span class="text-xs uppercase tracking-widest text-mist-gray">Agent Tools</span>
+                </div>
+                <form id="agent-offer-form" data-skip-validation class="flex items-center gap-3 mb-4">
+                  <input name="title" class="flex-1 px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Add a checklist item" />
+                  <button type="submit" class="px-4 py-2 rounded bg-warm-amber text-white text-sm font-semibold hover:bg-warm-amber/80">Add</button>
+                </form>
+                <p id="agent-offer-status" class="text-xs text-mist-gray mb-4">Checklist ready.</p>
+                <ul id="agent-offer-list" class="space-y-3 text-sm text-mist-gray">
+                  <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-warm-amber"></span>Proof of funds received</li>
+                  <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-warm-amber"></span>Attorney info confirmed</li>
+                  <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-warm-amber"></span>Inspection window set</li>
+                  <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-warm-amber"></span>Earnest money deposit ready</li>
+                </ul>
+              </section>
+
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="font-serif text-2xl text-charcoal font-bold">Partner Directory</h2>
+                  <span class="text-xs uppercase tracking-widest text-mist-gray">Preferred Vendors</span>
+                </div>
+                <form id="agent-partner-form" data-skip-validation class="space-y-3 mb-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Partner Name</label>
+                      <input name="name" required class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Harbor Legal Group" />
+                    </div>
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Role</label>
+                      <input name="role" class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Attorney" />
+                    </div>
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Email</label>
+                      <input name="email" type="email" class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="hello@partner.com" />
+                    </div>
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Phone</label>
+                      <input name="phone" class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="(555) 555-0123" />
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Notes</label>
+                    <textarea name="notes" rows={2} class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Licensing, specialties, coverage area"></textarea>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <p id="agent-partner-status" class="text-xs text-mist-gray">Directory ready.</p>
+                    <div class="flex items-center gap-2">
+                      <button id="agent-partner-cancel" type="button" class="hidden px-3 py-2 rounded border border-mist-gray/40 text-mist-gray text-xs font-semibold hover:bg-gray-50 transition-colors">Cancel</button>
+                      <button id="agent-partner-submit" type="submit" class="px-4 py-2 rounded bg-warm-amber text-white text-xs font-semibold hover:bg-warm-amber/80">Add Partner</button>
+                    </div>
+                  </div>
+                </form>
+                <div id="agent-partner-list" class="space-y-3 text-sm text-mist-gray">
+                  <div class="border border-dashed border-mist-gray/40 rounded-lg px-4 py-4 text-center text-sm text-mist-gray">
+                    No partners yet. Add your first trusted vendor.
+                  </div>
+                </div>
+              </section>
+
+              <section class="bg-white rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                  <h2 class="font-serif text-2xl text-charcoal font-bold">Vendor & Compliance Tracker</h2>
+                  <span class="text-xs uppercase tracking-widest text-mist-gray">Lite</span>
+                </div>
+                <p class="text-xs text-mist-gray mb-4">Manual compliance tracking. Automation, document vault, and reminders are <span class="font-semibold text-warm-amber">available in Enterprise Tier</span>.</p>
+                <form id="agent-vendor-form" data-skip-validation class="space-y-3 mb-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Vendor Name</label>
+                      <input name="vendor_name" required class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Brightline Plumbing" />
+                    </div>
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Trade Type</label>
+                      <input name="trade_type" class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="Plumber" />
+                    </div>
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Status</label>
+                      <select name="status" class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber">
+                        <option value="In Compliance">In Compliance</option>
+                        <option value="Expiring Soon">Expiring Soon</option>
+                        <option value="Expired">Expired</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-mist-gray mb-2">Expiration Date</label>
+                      <input name="expires_on" type="date" class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" />
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-mist-gray mb-2">Notes</label>
+                    <textarea name="notes" rows={2} class="w-full px-3 py-2 border border-mist-gray/30 rounded focus:outline-none focus:border-warm-amber" placeholder="COI expires, licensing coverage, follow-up"></textarea>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <p id="agent-vendor-status" class="text-xs text-mist-gray">Tracker ready.</p>
+                    <div class="flex items-center gap-2">
+                      <button id="agent-vendor-cancel" type="button" class="hidden px-3 py-2 rounded border border-mist-gray/40 text-mist-gray text-xs font-semibold hover:bg-gray-50 transition-colors">Cancel</button>
+                      <button id="agent-vendor-submit" type="submit" class="px-4 py-2 rounded bg-warm-amber text-white text-xs font-semibold hover:bg-warm-amber/80">Add Vendor</button>
+                    </div>
+                  </div>
+                </form>
+                <div id="agent-vendor-list" class="space-y-3 text-sm text-mist-gray">
+                  <div class="border border-dashed border-mist-gray/40 rounded-lg px-4 py-4 text-center text-sm text-mist-gray">
+                    No vendors yet. Add your first compliance record.
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div id="agent-lead-panel" class="fixed inset-0 z-50 hidden">
+            <div id="agent-lead-panel-overlay" class="absolute inset-0 bg-black/40"></div>
+            <div class="relative ml-auto h-full w-full max-w-md bg-white shadow-2xl p-6 overflow-y-auto">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <p class="text-xs uppercase tracking-widest text-warm-amber">Lead Details</p>
+                  <h3 class="text-2xl font-serif text-charcoal font-bold" id="lead-detail-name">Lead</h3>
+                </div>
+                <button id="agent-lead-panel-close" class="text-mist-gray hover:text-charcoal">
+                  <i class="fas fa-times text-xl"></i>
+                </button>
+              </div>
+
+              <div class="space-y-5 text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-mist-gray">Stage</span>
+                  <span class="font-semibold text-charcoal" id="lead-detail-stage">-</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-mist-gray">Budget</span>
+                  <span class="font-semibold text-charcoal" id="lead-detail-budget">-</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-mist-gray">Target Area</span>
+                  <span class="font-semibold text-charcoal" id="lead-detail-area">-</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-mist-gray">Timeline</span>
+                  <span class="font-semibold text-charcoal" id="lead-detail-timeline">-</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-mist-gray">Next Action</span>
+                  <span class="font-semibold text-charcoal" id="lead-detail-action">-</span>
+                </div>
+                <div>
+                  <span class="text-mist-gray">Notes</span>
+                  <p class="mt-2 rounded-lg border border-mist-gray/20 bg-soft-cream px-3 py-3 text-charcoal" id="lead-detail-notes">-</p>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-mist-gray">Created</span>
+                  <span class="font-semibold text-charcoal" id="lead-detail-created">-</span>
+                </div>
+              </div>
+
+              <div class="mt-8 flex items-center gap-3">
+                <button id="agent-lead-panel-edit" class="flex-1 rounded-lg bg-twilight-blue text-white py-2 font-semibold hover:bg-twilight-blue/90">
+                  Edit Lead
+                </button>
+                <button id="agent-lead-panel-delete" class="flex-1 rounded-lg border border-sunset-orange text-sunset-orange py-2 font-semibold hover:bg-sunset-orange/10">
+                  Delete Lead
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </>,
+    { title: 'Agent Dashboard | Peaceful Abodes Realty' }
   )
 })
 

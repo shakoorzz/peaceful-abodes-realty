@@ -16,18 +16,26 @@ export const Navigation: FC = () => {
             </a>
             
             {/* Desktop Navigation */}
-            <div class="hidden md:flex items-center space-x-8">
+            <div class="hidden md:flex items-center gap-6">
               <a href="/properties" class="text-white hover:text-warm-amber transition-colors duration-300 font-medium">Properties</a>
               <a href="/neighborhoods" class="text-white hover:text-warm-amber transition-colors duration-300 font-medium">Neighborhoods</a>
               <a href="/about" class="text-white hover:text-warm-amber transition-colors duration-300 font-medium">About</a>
               <a href="/contact" class="text-white hover:text-warm-amber transition-colors duration-300 font-medium">Contact</a>
+              <a href="/dashboard" data-dashboard-link class="text-white hover:text-warm-amber transition-colors duration-300 font-medium flex items-center gap-2">
+                <i class="fas fa-lock text-xs"></i>
+                Dashboard
+              </a>
             </div>
             
             {/* CTA Buttons */}
-            <div class="hidden md:flex items-center space-x-4">
+            <div class="hidden md:flex items-center gap-4">
               <a href="/portal" class="text-white hover:text-warm-amber transition-colors flex items-center gap-2">
                 <i class="fas fa-user-circle"></i>
                 <span>Client Portal</span>
+              </a>
+              <a href="/agent" class="text-white hover:text-warm-amber transition-colors flex items-center gap-2">
+                <i class="fas fa-briefcase"></i>
+                <span>Agent Portal</span>
               </a>
               <a href="/contact" class="bg-warm-amber hover:bg-warm-amber/80 text-white px-6 py-3 rounded font-medium transition-all duration-300 shadow-md hover:shadow-lg">
                 Schedule Consultation
@@ -76,12 +84,18 @@ export const Navigation: FC = () => {
               <a href="/contact" class="menu-item text-white text-xl font-medium py-3 rounded-lg hover:bg-white/10 hover:text-warm-amber transition-all duration-200 transform translate-x-8 opacity-0">
                 <i class="fas fa-envelope mr-3 text-warm-amber"></i>Contact
               </a>
+              <a href="/dashboard" data-dashboard-link class="menu-item text-white text-xl font-medium py-3 rounded-lg hover:bg-white/10 hover:text-warm-amber transition-all duration-200 transform translate-x-8 opacity-0">
+                <i class="fas fa-lock mr-3 text-warm-amber"></i>Dashboard
+              </a>
             </nav>
             
             {/* Bottom CTA buttons */}
             <div class="mt-auto space-y-4">
               <a href="/portal" class="menu-item block text-center text-white border-2 border-white/50 py-4 rounded-lg font-medium hover:bg-white hover:text-twilight-blue transition-all duration-200 transform translate-y-4 opacity-0">
                 <i class="fas fa-user-circle mr-2"></i>Client Portal
+              </a>
+              <a href="/agent" class="menu-item block text-center text-white border-2 border-white/50 py-4 rounded-lg font-medium hover:bg-white hover:text-twilight-blue transition-all duration-200 transform translate-y-4 opacity-0">
+                <i class="fas fa-briefcase mr-2"></i>Agent Portal
               </a>
               <a href="/contact" class="menu-item block text-center bg-warm-amber text-white py-4 rounded-lg font-semibold hover:bg-warm-amber/80 transition-all duration-200 shadow-lg transform translate-y-4 opacity-0">
                 Schedule Consultation

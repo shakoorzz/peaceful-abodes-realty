@@ -1,14 +1,18 @@
 // Peaceful Abodes Realty - Service Worker
-const CACHE_NAME = 'peaceful-abodes-v1';
+const CACHE_NAME = 'peaceful-abodes-v14';
 const urlsToCache = [
   '/',
   '/properties',
   '/neighborhoods',
   '/about',
   '/contact',
+  '/portal',
+  '/agent',
   '/static/style.css',
   '/static/app.js',
-  '/static/manifest.json'
+  '/static/manifest.json',
+  '/static/icon.svg',
+  '/static/agent-photo.jpg'
 ];
 
 // Install event
@@ -27,24 +31,39 @@ self.addEventListener('install', (event) => {
 
 // Fetch event
 self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const isNavigation = request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html');
+
+  if (isNavigation) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseToCache);
+          });
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request)
+    caches.match(request)
       .then((response) => {
-        // Return cached version or fetch from network
         if (response) {
           return response;
         }
-        return fetch(event.request)
+        return fetch(request)
           .then((response) => {
-            // Check if valid response
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
-            // Clone the response
             const responseToCache = response.clone();
             caches.open(CACHE_NAME)
               .then((cache) => {
-                cache.put(event.request, responseToCache);
+                cache.put(request, responseToCache);
               });
             return response;
           });

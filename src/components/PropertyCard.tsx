@@ -59,6 +59,11 @@ export const PropertyCard: FC<PropertyCardProps> = ({ property }) => {
           {property.type === 'residential' ? 'Residential' : 'Commercial'}
         </div>
         
+        {/* Status badge */}
+        <div class="absolute bottom-4 left-4 px-3 py-1 rounded text-sm font-semibold uppercase tracking-wide bg-black text-white">
+          {property.id === 'smith-388' ? 'For Sale' : 'Pending'}
+        </div>
+
         {/* Favorite button */}
         <button class="absolute bottom-4 right-4 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-warm-amber hover:text-white transition-colors" aria-label="Save to favorites">
           <i class="far fa-heart"></i>

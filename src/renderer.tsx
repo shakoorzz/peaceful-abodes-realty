@@ -41,6 +41,7 @@ export const renderer = jsxRenderer(({ children, title }) => {
           }
         `}} />
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.1/dist/umd/supabase.min.js"></script>
         <link href="/static/style.css" rel="stylesheet" />
         <link rel="manifest" href="/static/manifest.json" />
         <meta name="theme-color" content="#1a2332" />
